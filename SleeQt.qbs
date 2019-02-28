@@ -26,10 +26,14 @@ Project {
         files: [
             "MyListView.cpp",
             "MyListView.h",
+            "Screen.cpp",
+            "Screen.h",
             'main.cpp',
             'm_form.ui',
             'MainWindow.h',
-            'Model.h'
+            'MainWindow.cpp',
+            'Model.h',
+            'Model.cpp',
         ]
 
         Group {     // Properties for the produced executable

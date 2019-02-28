@@ -53,98 +53,16 @@ class MyListModel: public QAbstractListModel
 public:
     explicit MyListModel(QObject *parent = nullptr): QAbstractListModel(parent)
     {}
+    void Load(const QList<FileData>& files);
+    void ObtainFiles(QList<FileData>& files) const;
 
-    void Load(const QList<FileData>& files)
-    {
-        for(const FileData& file: files)
-        {
-            m_files.append(file);
-        }
-    }
-
-    void ObtainFiles(QList<FileData>& files) const
-    {
-        files = m_files;
-    }
-
-
-    QVariant data(const QModelIndex &index, int role) const
-    {
-        if (!index.isValid())
-        {
-            return QVariant();
-        }
-        const FileData fileData = m_files[index.row()];
-        switch (role)
-        {
-        case HeaderRole:
-            return fileData.header;
-
-        case PreviewRole:
-            return fileData.preview;
-
-        case FilePathRole:
-            return fileData.filePath;
-
-        case CreationDateRole:
-            return fileData.creationDate;
-
-        default:
-            return QVariant();
-
-        }
-    }
-
-    bool setData(const QModelIndex& index, const QVariant& value, int role)
-    {
-        if (!index.isValid())
-        {
-            return false;
-        }
-        if (role == Qt::EditRole)
-        {
-            m_files[index.row()].header = value.toString();
-        }
-        return true;
-    }
-
-    Qt::ItemFlags flags(const QModelIndex& index) const
-    {
-        if(!index.isValid())
-        {
-            return Qt::NoItemFlags;
-        }
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable ;
-    }
-
-    int rowCount(const QModelIndex& /*parent*/) const
-    {
-        return m_files.size();
-    }
+    virtual QVariant data(const QModelIndex &index, int role) const override;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role) override;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
+    virtual int rowCount(const QModelIndex& /*parent*/) const override;
 
 public slots:
-    void addFile(const QFileInfo& fileInf)
-    {
-        QString header = fileInf.fileName();
-        QPixmap preview;
-        bool isPlayable = false;
-        GetMiniature(fileInf, preview, isPlayable);
-        QDate creationDate = fileInf.birthTime().date();
-
-
-
-        FileData file{header
-                    , preview
-                    , fileInf.filePath()
-                    , creationDate
-                    , isPlayable
-                     };
-
-        m_files.append(file);
-
-
-        emit dataChanged(QModelIndex(), QModelIndex());
-    }
+    void addFile(const QFileInfo& fileInf);
 
 private:
     QList<FileData> m_files;
