@@ -6,7 +6,7 @@ Project {
 
     CppApplication {
         name: "ModelView"
-        Depends {name : "Qt"; submodules : ['core', 'gui', 'svg', 'widgets', 'network']}
+        Depends {name : "Qt"; submodules : ['core', 'gui', 'svg', 'widgets', 'network', 'multimedia']}
 
         cpp.cxxLanguageVersion: "c++11"
 
@@ -24,8 +24,12 @@ Project {
         ]
 
         files: [
+            "MyListItemDelegate.cpp",
+            "MyListItemDelegate.h",
             "MyListView.cpp",
             "MyListView.h",
+            "MyProxiModel.cpp",
+            "MyProxiModel.h",
             "Screen.cpp",
             "Screen.h",
             'main.cpp',

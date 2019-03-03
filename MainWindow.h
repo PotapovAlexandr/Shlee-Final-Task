@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "MyListView.h"
 
+class MyProxiModel;
 
 class MainWindow: public QMainWindow
 {
@@ -19,22 +20,18 @@ public:
 protected:
     virtual void dragEnterEvent(QDragEnterEvent* event);
     virtual void dropEvent(QDropEvent* event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 public slots:
 
 private:
-    void SetGui()
-    {
-        m_ui.setupUi(this);
-    }
-    void LoadData()
-    {}
-    void SaveData()
-    {}
+    void SetGui();
+    void LoadData(MyListModel* model);
+    void SaveData(MyListModel* model);
 
 private:
     Ui_MainWindow m_ui;
-    MyListModel* m_model;
+    MyProxiModel* m_proxiModel;
 };
 
 

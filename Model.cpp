@@ -1,5 +1,27 @@
 #include "Model.h"
 
+namespace
+{
+    void GetMiniature(const QFileInfo& file, QPixmap& image, bool& isPlayable)
+    {
+        QString fileSuffix = file.suffix();
+        isPlayable = true;
+
+        if (fileSuffix == "jpeg" || fileSuffix == "jpg")
+        {
+            image.load(file.filePath());
+        }
+        else if (fileSuffix == "avi")
+        {
+            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\video.jpg");
+        }
+        else
+        {
+            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\file.jpeg");
+            isPlayable = false;
+        }
+    }
+}
 
 void MyListModel::Load(const QList<FileData> &files)
 {
@@ -46,7 +68,15 @@ bool MyListModel::setData(const QModelIndex &index, const QVariant &value, int r
     }
     if (role == Qt::EditRole)
     {
-        m_files[index.row()].header = value.toString();
+        if(value.toString().isEmpty())
+        {
+           QString fileName =  QFileInfo (m_files[index.row()].filePath).fileName();
+           m_files[index.row()].header = fileName;
+        }
+        else
+        {
+            m_files[index.row()].header = value.toString();
+        }
     }
     return true;
 }
@@ -65,23 +95,25 @@ int MyListModel::rowCount(const QModelIndex &) const
     return m_files.size();
 }
 
-void MyListModel::addFile(const QFileInfo &fileInf)
+void MyListModel::AddFile(const QFileInfo &fileInf, const QString& haeder)
 {
-    QString header = fileInf.fileName();
     QPixmap preview;
     bool isPlayable = false;
     GetMiniature(fileInf, preview, isPlayable);
-    QDate creationDate = fileInf.birthTime().date();
 
-    FileData file{header
+    FileData file{haeder.isEmpty()? fileInf.fileName() : haeder
                 , preview
                 , fileInf.filePath()
-                , creationDate
+                , fileInf.birthTime().date()
                 , isPlayable
                  };
 
     m_files.append(file);
 
-
     emit dataChanged(QModelIndex(), QModelIndex());
+}
+
+void MyListModel::DelFile(QModelIndex &index)
+{
+    m_files.removeAt(index.row());
 }

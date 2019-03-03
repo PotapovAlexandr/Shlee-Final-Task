@@ -2,33 +2,6 @@
 #include <QtWidgets>
 #include <QAbstractListModel>
 
-
-
-
-namespace
-{
-    void GetMiniature(const QFileInfo& file, QPixmap& image, bool& isPlayable)
-    {
-        QString fileSuffix = file.suffix();
-        isPlayable = true;
-
-        if (fileSuffix == "jpeg" || fileSuffix == "jpg")
-        {
-            image.load(file.filePath());
-        }
-        else if (fileSuffix == "avi")
-        {
-            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\video.jpg");
-        }
-        else
-        {
-            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\file.jpeg");
-            isPlayable = false;
-        }
-    }
-}
-
-
 struct FileData
 {
     QString header;
@@ -44,7 +17,8 @@ enum FileDataRoles
     PreviewRole = Qt::UserRole + 1,
     FilePathRole = Qt::UserRole + 2,
     CreationDateRole = Qt::UserRole + 3,
-    IsPlayableRole = Qt::UserRole + 4
+    IsPlayableRole = Qt::UserRole + 4,
+    IsSelectedRole = Qt::UserRole + 5
 };
 
 class MyListModel: public QAbstractListModel
@@ -61,8 +35,8 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
     virtual int rowCount(const QModelIndex& /*parent*/) const override;
 
-public slots:
-    void addFile(const QFileInfo& fileInf);
+    void AddFile(const QFileInfo& fileInf, const QString& haeder = "");
+    void DelFile(QModelIndex& index);
 
 private:
     QList<FileData> m_files;
