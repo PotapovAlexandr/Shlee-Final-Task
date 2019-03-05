@@ -13,11 +13,11 @@ namespace
         }
         else if (fileSuffix == "avi")
         {
-            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\video.jpg");
+            image.load(":/images/img/video.jpg");
         }
         else
         {
-            image.load("C:\\Users\\potapov.alexander\\Documents\\SleeQtFinalTask\\file.jpeg");
+            image.load(":/images/img/file.jpeg");
             isPlayable = false;
         }
     }

@@ -10,16 +10,17 @@ MainWindow::MainWindow(QWidget *pwgt):
     setAcceptDrops(true);
 
     MyListModel* model = new MyListModel(this);
-
     LoadData(model);
 
     m_proxiModel->setSourceModel(model);
+
     MyListView* view = m_ui.listView;
     view->setModel(m_proxiModel);
-    //view->setSelectionModel();
 
-    m_proxiModel->setSortRole(HeaderRole);
-
+    connect(m_ui.searcher, &QLineEdit::textEdited, m_proxiModel, &MyProxiModel::ChangeFilter);
+    connect (m_ui.btn_sortAZ, &QPushButton::pressed, this, &MainWindow::OnSortAZ);
+    connect (m_ui.btn_sortZA, &QPushButton::pressed, this, &MainWindow::OnSortZA);
+    connect (m_ui.btn_sortDate, &QPushButton::pressed, this, &MainWindow::OnSortDate);
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +71,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void MainWindow::OnSortAZ()
+{
+    m_proxiModel->setSortRole(HeaderRole);
+    m_proxiModel->sort(0, Qt::AscendingOrder);
+    m_proxiModel->invalidate();
+}
+
+void MainWindow::OnSortZA()
+{
+    m_proxiModel->setSortRole(HeaderRole);
+    m_proxiModel->sort(0, Qt::DescendingOrder);
+    m_proxiModel->invalidate();
+
+}
+
+void MainWindow::OnSortDate()
+{
+    m_proxiModel->setSortRole(CreationDateRole);
+    m_proxiModel->sort(0, Qt::AscendingOrder);
+    m_proxiModel->invalidate();
+}
+
 void MainWindow::SetGui()
 {
     m_ui.setupUi(this);
@@ -95,7 +118,10 @@ void MainWindow::LoadData(MyListModel* model)
         header = in.readLine();
         path = in.readLine();
         QFileInfo fileInf(path);
-        model->AddFile(fileInf, header);
+        if (fileInf.isFile())
+        {
+            model->AddFile(fileInf, header);
+        }
     }
     fileDb.close();
 }

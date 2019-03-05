@@ -6,7 +6,7 @@ Project {
 
     CppApplication {
         name: "ModelView"
-        Depends {name : "Qt"; submodules : ['core', 'gui', 'svg', 'widgets', 'network', 'multimedia']}
+        Depends {name : "Qt"; submodules : ['core', 'gui', 'svg', 'widgets', 'network', 'multimedia', 'multimediawidgets']}
 
         cpp.cxxLanguageVersion: "c++11"
 
@@ -32,6 +32,7 @@ Project {
             "MyProxiModel.h",
             "Screen.cpp",
             "Screen.h",
+            "resource.qrc",
             'main.cpp',
             'm_form.ui',
             'MainWindow.h',

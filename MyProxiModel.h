@@ -10,10 +10,14 @@ class MyProxiModel : public QSortFilterProxyModel
 public:
     MyProxiModel(QObject *parent = nullptr);
 
-    virtual QVariant data(const QModelIndex &index, int role) const override;
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role) override;
-    virtual Qt::ItemFlags flags(const QModelIndex& index) const override;
-    virtual int rowCount(const QModelIndex& /*parent*/) const override;
+public slots:
+    void ChangeFilter(const QString& newFilter);
 
+protected:
+    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    virtual bool lessThan(const QModelIndex& sourceLeft, const QModelIndex& sourceRight) const override;
+
+private:
+    QString m_filter;
 };
 

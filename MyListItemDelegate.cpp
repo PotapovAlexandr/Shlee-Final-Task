@@ -27,12 +27,14 @@ namespace
 
     void ShowContent(const QString& filePath)
     {
-        Screen screen;
-
-        screen.LoadFile(filePath);
-
+        Screen* screen = new Screen();
+        screen->LoadFile(filePath);
+        screen->showFullScreen();
     }
 }
+
+MyListItemDelegate::MyListItemDelegate(QWidget *parent):QStyledItemDelegate(parent)
+{}
 
 QSize MyListItemDelegate::sizeHint(const QStyleOptionViewItem& /*option*/, const QModelIndex& /*index*/) const
 {

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <QMediaPlayer>
 #include <QObject>
 #include <QLabel>
 
@@ -11,5 +11,6 @@ public:
     void LoadFile(const QString& filePath);
 
     virtual void keyPressEvent(QKeyEvent *event) override;
-
+private:
+    QMediaPlayer* m_player;
 };

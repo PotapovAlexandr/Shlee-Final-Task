@@ -23,6 +23,9 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
 
 public slots:
+    void OnSortAZ();
+    void OnSortZA();
+    void OnSortDate();
 
 private:
     void SetGui();

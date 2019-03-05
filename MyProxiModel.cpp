@@ -4,38 +4,30 @@ MyProxiModel::MyProxiModel(QObject *parent): QSortFilterProxyModel(parent)
 {
 }
 
-QVariant MyProxiModel::data(const QModelIndex &index, int role) const
+void MyProxiModel::ChangeFilter(const QString& newFilter)
 {
-    if (!index.isValid())
-    {
-        return QVariant();
-    }
-    return sourceModel()->data(index, role);
+    m_filter= newFilter;
+    invalidate();
 }
 
-bool MyProxiModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool MyProxiModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (!index.isValid())
+    if (m_filter.isEmpty())
     {
-        return false;
+        return true;
     }
-    if (role == Qt::EditRole)
-    {
-        sourceModel()->setData(index, value, role);
-    }
-    return true;
+    QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+    return index.data(HeaderRole).toString().contains(m_filter, Qt::CaseInsensitive);
 }
 
-Qt::ItemFlags MyProxiModel::flags(const QModelIndex &index) const
+bool MyProxiModel::lessThan(const QModelIndex& sourceLeft, const QModelIndex& sourceRight) const
 {
-    if(!index.isValid())
+    if (sortRole() == HeaderRole)
     {
-        return Qt::NoItemFlags;
+        return sourceLeft.data(HeaderRole).toString() < sourceRight.data(HeaderRole).toString();
     }
-    return  sourceModel()->flags(index);
-}
-
-int MyProxiModel::rowCount(const QModelIndex &) const
-{
-    return  sourceModel()->rowCount();
+    else
+    {
+        return sourceLeft.data(CreationDateRole).toDate() < sourceRight.data(CreationDateRole).toDate();
+    }
 }

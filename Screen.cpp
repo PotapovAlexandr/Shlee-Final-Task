@@ -1,10 +1,11 @@
 #include <QtWidgets>
-#include <QMediaPlayer>
-//#include <QVideoWidget>
+#include <QVideoWidget>
 
 #include "Screen.h"
 
-Screen::Screen(QWidget *parent): QLabel(parent)
+Screen::Screen(QWidget *parent):
+    QLabel(parent)
+  , m_player( new QMediaPlayer(this))
 {
     setScaledContents(true);
 }
@@ -18,15 +19,25 @@ void Screen::LoadFile(const QString &filePath)
     }
     else if (fileSuffix == "avi")
     {
-        QMediaPlayer player;
-        player.setMedia(QUrl::fromLocalFile(filePath));
-        player.play();
-//        QVideoWidget videoWidget;
-//        player.setVideoOutput(videoWidget);
+        m_player->setAudioRole(QAudio::VideoRole);
+        m_player->setMedia(QUrl::fromLocalFile(filePath));
+
+        QVideoWidget* videoWidget = new QVideoWidget(this);
+        m_player->setVideoOutput(videoWidget);
+
+        QHBoxLayout* layout = new QHBoxLayout(this);
+        layout->addWidget(videoWidget);
+
+        setLayout(layout);
+        m_player->play();
     }
 }
 
 void Screen::keyPressEvent(QKeyEvent* /*event*/)
 {
+    if(m_player->isAvailable())
+    {
+        m_player->stop();
+    }
     close();
 }
